@@ -1,0 +1,37 @@
+.App {
+    display: flex;
+    padding: 20px;
+    gap: 20px;
+    justify-content: center;
+}
+
+#add-person-button{
+    position: fixed;
+    bottom: 50px;
+    padding: 20px 100px;
+}
+
+.employees, .management {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.App .list-group-item {
+    display: flex;
+    justify-content: space-between;
+}
+
+.person-form{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.person-form > div{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 50px;
+}
