@@ -23,7 +23,7 @@ function App() {
                 break;
 
             case 'manager':
-                setManagersData(getAllPersonsFromDB(arrayName));
+                setManagersData(getAllPersonsFromDB('manager'));
                 break;
 
             default: return;
