@@ -1,3 +1,4 @@
+import React from "react";
 import { ListGroup } from "react-bootstrap";
 import Person from '../interfaces/Person';
 import PersonsListItem from "./PersonsListItem";
@@ -8,12 +9,12 @@ type Props = {
     setSelectedPerson: React.Dispatch<any>
 };
 
-const PersonsList = ({personsArray, setModalShow, setSelectedPerson}: Props) => {
+const PersonsList = React.memo(({personsArray, setModalShow, setSelectedPerson}: Props) => {
     
 
-    const onClickOpenPersonDetails = (person: Person) => {
+    const onClickOpenPersonDetails = (selectedPerson: Person) => {
         setModalShow(true);
-        setSelectedPerson(person);
+        setSelectedPerson(selectedPerson);
     };
 
     return (
@@ -27,6 +28,6 @@ const PersonsList = ({personsArray, setModalShow, setSelectedPerson}: Props) => 
             }
         </ListGroup>
     );
-};
+});
 
 export default PersonsList;
