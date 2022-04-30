@@ -38,13 +38,13 @@ export const addNewPersonToDB = (type: string, person: Person) => {
     switch(type){
         case 'employee':
             person.id = data.employees.length;
-            while(getIndexOfPersonById(person.id, data.employees) === -1) person.id++;
+            while(getIndexOfPersonById(person.id, data.employees) !== -1) person.id++;
             data.employees.push(person);           
             break;
 
         case 'manager':
             person.id = data.managers.length;
-            while(getIndexOfPersonById(person.id, data.managers) === -1) person.id++;
+            while(getIndexOfPersonById(person.id, data.managers) !== -1) person.id++;
             data.managers.push(person);
             break;
 

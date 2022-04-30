@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Button, Modal } from "react-bootstrap";
+import { useEffect, useState } from "react";
+import { Button, ButtonGroup, Modal, ToggleButton } from "react-bootstrap";
 import { useForm } from "../customHooks/customHooks";
 import Person from "../interfaces/Person";
 import ButtonWithPopoverVerification from "./ButtonWithPopoverVerification";
@@ -11,10 +11,12 @@ type Props = {
     onHide: ()=>void, 
     person: Person, 
     deletePerson: ()=> void,
-    updatePerson: (newPersonData: {[index: string]: string})=> void
+    updatePerson: (newPersonData: {[index: string]: string})=> void,
+    personType: string,
+    changePersonTypeAndUpdate: (newPersonData: {[index: string]: string})=> void
 };
 
-function PersonDetailsModal({show, onHide, person, deletePerson, updatePerson}: Props){
+function PersonDetailsModal({show, onHide, person, deletePerson, updatePerson, personType, changePersonTypeAndUpdate}: Props){
     const [editModeActive, setEditModeActive] = useState(false);
     const {values, handleChange, clearForm} = useForm({
         first_name: person.first_name,
@@ -23,8 +25,10 @@ function PersonDetailsModal({show, onHide, person, deletePerson, updatePerson}: 
         email: person.email,
         ip_address: person.ip_address
     });
+    const [currentPersonType, setCurrentPersonType] = useState(personType);
 
     const hideModal = () => {
+        setCurrentPersonType(personType);
         setEditModeActive(false);
         onHide();
     };
@@ -34,8 +38,10 @@ function PersonDetailsModal({show, onHide, person, deletePerson, updatePerson}: 
         hideModal();
     };
 
-    const onClickUpdatePerson = () => {        
-        updatePerson(values);        
+    const onClickUpdatePerson = () => {   
+        personType == currentPersonType ?
+        updatePerson(values) :
+        changePersonTypeAndUpdate(values);
         hideModal();
         clearAndCloseForm();
     };
@@ -48,7 +54,7 @@ function PersonDetailsModal({show, onHide, person, deletePerson, updatePerson}: 
     return (
         <Modal
             show={show}
-            onHide={onHide}
+            onHide={hideModal}
             aria-labelledby="contained-modal-title-vcenter"
             centered
         >
@@ -59,9 +65,39 @@ function PersonDetailsModal({show, onHide, person, deletePerson, updatePerson}: 
             </Modal.Header>
             <Modal.Body>
                 {
-                    editModeActive ?
-                    <EditPersonDetailsList values={values} handleChange={handleChange} person={person} /> :
-                    <PersonDetailsList person={person} />
+                    editModeActive 
+                    ? <div>
+                        <div>
+                            <ButtonGroup>                    
+                                <ToggleButton
+                                    key='employee'
+                                    id='employee'
+                                    type="radio"
+                                    variant={currentPersonType === 'employee' ? 'primary' : 'secondary'}
+                                    name="radio"
+                                    value='employee'
+                                    checked={currentPersonType === 'employee'}
+                                    onChange={(e) => setCurrentPersonType(e.currentTarget.value)}
+                                >
+                                    Employee
+                                </ToggleButton>  
+                                <ToggleButton
+                                    key='manager'
+                                    id='manager'
+                                    type="radio"
+                                    variant={currentPersonType === 'manager' ? 'primary' : 'secondary'}
+                                    name="radio"
+                                    value='manager'
+                                    checked={currentPersonType === 'manager'}
+                                    onChange={(e) => setCurrentPersonType(e.currentTarget.value)}
+                                >
+                                    Manager
+                                </ToggleButton>                  
+                            </ButtonGroup>
+                        </div>                        
+                        <EditPersonDetailsList values={values} handleChange={handleChange} person={person} /> 
+                    </div>
+                    : <PersonDetailsList person={person} />
                 }
             </Modal.Body>
             <Modal.Footer>
@@ -70,7 +106,7 @@ function PersonDetailsModal({show, onHide, person, deletePerson, updatePerson}: 
                     : <Button variant="success" onClick={()=>setEditModeActive(true)} >Edit</Button>
                 }
                 <ButtonWithPopoverVerification mainVariant="danger" mainText="Delete" yesVariant="danger" noVariant="secondary" PerformAction={onClickDeletePerson} />
-                <Button variant="primary" onClick={onHide}>Close</Button>
+                <Button variant="primary" onClick={hideModal}>Close</Button>
             </Modal.Footer>
         </Modal>
       );

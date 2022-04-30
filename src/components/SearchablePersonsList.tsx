@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import Person from "../interfaces/Person";
-import { deletePersonFromDB, updatePersonInDB } from "../pseudoDB/pseudoDB";
+import { addNewPersonToDB, deletePersonFromDB, updatePersonInDB } from "../pseudoDB/pseudoDB";
 import { filterPersonsByFullName } from "../utils/filters";
 import PersonDetailsModal from "./PersonDetailsModal";
 import PersonsList from "./PersonsList";
@@ -14,10 +14,11 @@ type Props = {
     className: string; 
     title: string; 
     placeholder: string, 
-    triggerUpdatePersons: ()=>void
+    triggerUpdatePersons: ()=>void,
+    triggerUpdateAll: ()=>void
 };
 
-const SearchablePersonsList = ({personsArray, className, title, placeholder, triggerUpdatePersons}: Props) => {
+const SearchablePersonsList = ({personsArray, className, title, placeholder, triggerUpdatePersons, triggerUpdateAll}: Props) => {
     const [inputValue, setInputValue] = useState('');
     const [filteredPersons, setFilteredPersons] = useState(personsArray);
     const [personDetailsModalShow, setPersonDetailsModalShow] = useState(false);
@@ -28,6 +29,12 @@ const SearchablePersonsList = ({personsArray, className, title, placeholder, tri
     useEffect(() => {
         setFilteredPersons(filterPersonsByFullName(inputValue, personsArray));
     }, [personsArray]);
+
+    const changePersonTypeAndUpdate = (newPersonData: {[index: string]: string}) => {
+        deletePersonFromDB(personType, selectedPerson.id);
+        addNewPersonToDB(personType === "employee" ? 'manager': 'employee', getValidPerson(newPersonData));
+        triggerUpdateAll();
+    };
     
     const deletePerson = () => {
         deletePersonFromDB(personType, selectedPerson.id);
@@ -75,6 +82,8 @@ const SearchablePersonsList = ({personsArray, className, title, placeholder, tri
                 person={selectedPerson}
                 deletePerson={deletePerson}
                 updatePerson={updatePerson}
+                personType={personType}
+                changePersonTypeAndUpdate={changePersonTypeAndUpdate}
             />
         </div>
     );

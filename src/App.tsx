@@ -10,8 +10,7 @@ function App() {
     const [managersData, setManagersData] = useState<Person[]>([]);
 
     useEffect(() => {
-        setEmployeesData(getAllPersonsFromDB('employee'));
-        setManagersData(getAllPersonsFromDB('manager'));  
+        updateAll(); 
     }, []);
 
     const triggerUpdatePersons = (arrayName: string) => {
@@ -28,6 +27,11 @@ function App() {
         };        
     };
 
+    const updateAll = () => {
+        setEmployeesData(getAllPersonsFromDB('employee'));
+        setManagersData(getAllPersonsFromDB('manager'));
+    };
+
     return (
         <div className="App">
             {   employeesData.length > 0 ?
@@ -37,6 +41,7 @@ function App() {
                     title='Employees' 
                     placeholder='Search employee name'
                     triggerUpdatePersons={()=>setEmployeesData(getAllPersonsFromDB('employee'))}
+                    triggerUpdateAll={updateAll}
                 /> : 
                 'Loading Employees'
             }
@@ -47,6 +52,7 @@ function App() {
                     title='Management' 
                     placeholder='Search manager name'
                     triggerUpdatePersons={()=>setManagersData(getAllPersonsFromDB('manager'))}
+                    triggerUpdateAll={updateAll}
                 /> :
                 'Loading Managers'
             }
