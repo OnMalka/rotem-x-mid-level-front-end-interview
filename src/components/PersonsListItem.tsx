@@ -1,15 +1,16 @@
+import React, { useMemo } from "react";
 import { Badge, ListGroupItem } from "react-bootstrap";
 import Person from "../interfaces/Person";
 import memoizedFibonacci from "../utils/memoizedFibonacci";
 
-const PersonsListItem = ({person, onClickOpenPersonDetails}: {person: Person, onClickOpenPersonDetails: (person: Person)=>void}) => {
+const PersonsListItem = React.memo(({person, onClickOpenPersonDetails}: {person: Person, onClickOpenPersonDetails: (person: Person)=>void}) => {
 
     return (
         <ListGroupItem onClick={()=>onClickOpenPersonDetails(person)}>
             <span>{person.first_name} {person.last_name}</span>
-            <Badge bg="primary">{memoizedFibonacci()}</Badge>
+            <Badge bg="primary">{useMemo(() => memoizedFibonacci(), [])}</Badge>
         </ListGroupItem>
     );
-};
+});
 
 export default PersonsListItem;

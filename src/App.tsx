@@ -3,13 +3,11 @@ import SearchablePersonsList from './components/SearchablePersonsList';
 import { getAllPersonsFromDB } from './pseudoDB/pseudoDB';
 import { useEffect, useState } from 'react';
 import Person from './interfaces/Person';
-import { Button } from 'react-bootstrap';
-import AddPersonModal from './components/AddPersonModal';
+import AddPerson from './components/AddPerson';
 
 function App() {
-    const [employeesData, setEmployeesData] = useState([] as Person[]);
-    const [managersData, setManagersData] = useState([] as Person[]);
-    const [addPersonModalShow, setAddPersonModalShow] = useState(false);
+    const [employeesData, setEmployeesData] = useState<Person[]>([]);
+    const [managersData, setManagersData] = useState<Person[]>([]);
 
     useEffect(() => {
         setEmployeesData(getAllPersonsFromDB('employee'));
@@ -52,8 +50,7 @@ function App() {
                 /> :
                 'Loading Managers'
             }
-            <AddPersonModal show={addPersonModalShow} onHide={()=>setAddPersonModalShow(false)} triggerUpdatePersons={triggerUpdatePersons} />
-            <Button onClick={()=>setAddPersonModalShow(true)} variant='primary' id='add-person-button'>Add Person</Button>
+            <AddPerson triggerUpdatePersons={triggerUpdatePersons} />
         </div>
     )
 }
